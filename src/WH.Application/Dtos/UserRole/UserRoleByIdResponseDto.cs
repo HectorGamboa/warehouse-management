@@ -5,6 +5,6 @@
         public int UserRoleId { get; init; }
         public string UserId { get; init; } = null!;
         public string RoleId { get; init; } = null!;
-        public string? State { get; init; }
+        public bool State { get; init; }
     }
 }

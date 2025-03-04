@@ -4,14 +4,14 @@ using WH.Domain.Entities;
 
 namespace WH.Infrastructure.Persistence.Context.Configurations
 {
-    public class MenuConfiguration : IEntityTypeConfiguration<Menu>
+    public class ModuleConfiguration : IEntityTypeConfiguration<Module>
     {
-        public void Configure(EntityTypeBuilder<Menu> builder)
+        public void Configure(EntityTypeBuilder<Module> builder)
         {
             builder.HasKey(e => e.Id);
 
             builder.Property(e => e.Id)
-                .HasColumnName("MenuId");
+                .HasColumnName("ModuleId");
 
             builder.Property(e => e.Name)
                 .HasMaxLength(150)

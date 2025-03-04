@@ -45,7 +45,7 @@ namespace WH.Application.UseCases.Users.Queries.GetAllQuery
                 if (request.StateFilter is not null)
                 {
                     var stateFilter = Helper.SplitStateFilter(request.StateFilter);
-                    users = users.Where(x => stateFilter.Contains(x.State));
+                    users = users.Where(x => stateFilter.Contains(x.State.ToString()));
                 }
 
                 if (!string.IsNullOrEmpty(request.StartDate) && !string.IsNullOrEmpty(request.EndDate))

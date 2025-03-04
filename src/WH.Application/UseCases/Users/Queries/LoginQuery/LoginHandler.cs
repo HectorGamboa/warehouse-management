@@ -2,6 +2,7 @@
 using WH.Application.Commons.Bases;
 using WH.Application.Interfaces.Authentication;
 using WH.Application.Interfaces.Services;
+using WH.Domain.Entities;
 using BC = BCrypt.Net.BCrypt;
 
 namespace WH.Application.UseCases.Users.Queries.LoginQuery
@@ -40,7 +41,19 @@ namespace WH.Application.UseCases.Users.Queries.LoginQuery
                 }
 
                 response.IsSuccess = true;
-                response.Data = _jwtTokenGenerator.GenerateToken(user);
+                response.AccessToken = _jwtTokenGenerator.GenerateToken(user);
+
+                var refreshToken = new RefreshToken
+                {
+                    Id = Guid.NewGuid(),
+                    UserId = user.Id,
+                    Token = _jwtTokenGenerator.GenerateRefreshToken(),
+                    ExpiresOnUtc = DateTime.UtcNow.AddDays(7)
+                };
+
+                _unitOfWork.RefreshToken.CreateToken(refreshToken);
+                await _unitOfWork.SaveChangesAsync();
+                response.RefreshToken = refreshToken.Token;
                 response.Message = "Token generado correctamente";
             }
             catch (Exception ex)

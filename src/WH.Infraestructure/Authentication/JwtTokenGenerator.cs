@@ -2,6 +2,7 @@
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using WH.Application.Interfaces.Authentication;
 using WH.Domain.Entities;
@@ -42,5 +43,10 @@ namespace WH.Infrastructure.Authentication
 
             return new JwtSecurityTokenHandler().WriteToken(securityToken);
         }
+        public string GenerateRefreshToken()
+        {
+            return Convert.ToBase64String(RandomNumberGenerator.GetBytes(32));
+        }
     }
+
 }

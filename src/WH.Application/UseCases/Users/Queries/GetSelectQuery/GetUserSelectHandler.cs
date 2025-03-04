@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using MediatR;
 using WH.Application.Commons.Bases;
-using WH.Application.Constants;
 using WH.Application.Dtos.Commons;
 using WH.Application.Interfaces.Services;
+using WH.Application.Shared;
 
 namespace WH.Application.UseCases.Users.Queries.GetSelectQuery
 {
@@ -29,13 +29,13 @@ namespace WH.Application.UseCases.Users.Queries.GetSelectQuery
                 if (users is null)
                 {
                     response.IsSuccess = false;
-                    response.Message = GlobalMessages.MESSAGE_QUERY_EMPTY;
+                    response.Message = Constants.MESSAGE_QUERY_EMPTY;
                     return response;
                 }
 
                 response.IsSuccess = true;
                 response.Data = _mapper.Map<IEnumerable<SelectResponseDto>>(users);
-                response.Message = GlobalMessages.MESSAGE_QUERY;
+                response.Message = Constants.MESSAGE_QUERY;
             }
             catch (Exception ex)
             {

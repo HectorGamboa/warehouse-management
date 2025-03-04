@@ -29,5 +29,4 @@ namespace WH.Api.Authentication
             return services;
         }
     }
-
 }

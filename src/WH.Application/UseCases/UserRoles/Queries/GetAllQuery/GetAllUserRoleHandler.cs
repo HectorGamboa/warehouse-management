@@ -51,7 +51,7 @@ namespace WH.Application.UseCases.UserRoles.Queries.GetAllQuery
                 if (request.StateFilter is not null)
                 {
                     var stateFilter = Helper.SplitStateFilter(request.StateFilter);
-                    userRoles = userRoles.Where(x => stateFilter.Contains(x.State));
+                    userRoles = userRoles.Where(x => stateFilter.Contains(x.State.ToString()));
                 }
 
                 if (!string.IsNullOrEmpty(request.StartDate) && !string.IsNullOrEmpty(request.EndDate))

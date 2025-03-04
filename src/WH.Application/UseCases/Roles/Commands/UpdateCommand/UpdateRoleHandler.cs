@@ -34,7 +34,7 @@ namespace WH.Application.UseCases.Roles.Commands.UpdateCommand
                         .GetPermissionRolesByRoleId(request.RoleId);
 
                 var existingMenus = await _unitOfWork.Menu
-                        .GetMenuRolesByRoleId(request.RoleId);
+                        .GetModuleRolesByRoleId(request.RoleId);
 
                 var newPermissions = request.Permissions
                         .Where(p => p.Selected && !existingPermissions.Any(ep => ep.PermissionId == p.PermissionId))
@@ -47,14 +47,14 @@ namespace WH.Application.UseCases.Roles.Commands.UpdateCommand
                 await _unitOfWork.Permission.RegisterRolePermissions(newPermissions);
 
                 var newMenus = request.Menus
-                        .Where(p => !existingMenus.Any(ep => ep.MenuId == p.MenuId))
-                        .Select(p => new MenuRole
+                        .Where(p => !existingMenus.Any(ep => ep.ModuleId == p.MenuId))
+                        .Select(p => new ModuleRole
                         {
                             RoleId = role.Id,
-                            MenuId = p.MenuId
+                            ModuleId = p.MenuId
                         });
 
-                await _unitOfWork.Menu.RegisterRoleMenus(newMenus);
+                await _unitOfWork.Menu.RegisterRoleModules(newMenus);
 
                 var permissionsToDelete = existingPermissions
                         .Where(ep => !request.Permissions.Any(p => p.PermissionId == ep.PermissionId && p.Selected))
@@ -63,10 +63,10 @@ namespace WH.Application.UseCases.Roles.Commands.UpdateCommand
                 await _unitOfWork.Permission.DeleteRolePermission(permissionsToDelete);
 
                 var menusToDelete = existingMenus
-                        .Where(ep => !request.Menus.Any(p => p.MenuId == ep.MenuId))
+                        .Where(ep => !request.Menus.Any(p => p.MenuId == ep.ModuleId))
                         .ToList();
 
-                await _unitOfWork.Menu.DeleteMenuRole(menusToDelete);
+                await _unitOfWork.Menu.DeleteModuleRole(menusToDelete);
 
                 transaction.Commit();
                 response.IsSuccess = true;

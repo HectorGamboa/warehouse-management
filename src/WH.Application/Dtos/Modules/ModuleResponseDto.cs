@@ -1,6 +1,6 @@
-﻿namespace WH.Application.Dtos.Menus
+﻿namespace WH.Application.Dtos.Modules
 {
-    public record MenuResponseDto
+    public record ModuleResponseDto
     {
         public int MenuId { get; init; }
         public string? Item { get; init; }

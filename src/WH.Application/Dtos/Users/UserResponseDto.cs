@@ -6,7 +6,7 @@
         public string? FirstName { get; init; }
         public string? LastName { get; init; }
         public string? Email { get; init; }
-        public string? State { get; init; }
+        public bool State { get; init; }
         public string? StateDescription { get; init; }
         public DateTime AuditCreateDate { get; init; }
     }

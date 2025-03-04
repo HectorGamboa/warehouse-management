@@ -6,6 +6,6 @@
         public string? Description { get; init; }
         public string Slug { get; set; } = null!;
         public int MenuId { get; set; }
-        public virtual Menu Menu { get; set; } = null!;
+        public virtual Module Menu { get; set; } = null!;
     }
 }

@@ -5,38 +5,38 @@ using WH.Infrastructure.Persistence.Context;
 
 namespace WH.Infrastructure.Persistence.Repositories
 {
-    public class MenuRepository(ApplicationDbContext context) : IMenuRepository
+    public class ModuleRepository(ApplicationDbContext context) : IModuleRepository
     {
         private readonly ApplicationDbContext _context = context;
 
-        public async Task<bool> DeleteMenuRole(List<MenuRole> menuRoles)
+        public async Task<bool> DeleteModuleRole(List<ModuleRole> moduleRoles)
         {
-            _context.MenuRoles.RemoveRange(menuRoles);
+            _context.ModuleRoles.RemoveRange(moduleRoles);
             var recordsAffected = await _context.SaveChangesAsync();
             return recordsAffected > 0;
         }
 
-        public async Task<IEnumerable<Menu>> GetMenuByUserIdAsync(int userId)
+        public async Task<IEnumerable<Module>> GetModuleByUserIdAsync(int userId)
         {
             var userRole = await _context.UserRoles.FirstOrDefaultAsync(x => x.UserId == userId);
 
-            var menus = await _context.Menus
+            var modules = await _context.Modules
                 .AsNoTracking()
                 .AsSplitQuery()
-                .Join(_context.MenuRoles, m => m.Id, mr => mr.MenuId, (m, mr) => new { Menu = m, MenuRole = mr })
-                .Where(x => x.MenuRole.RoleId == userRole!.RoleId && x.Menu.State == "1")
-                .Select(x => x.Menu)
+                .Join(_context.ModuleRoles, m => m.Id, mr => mr.ModuleId, (m, mr) => new { Module = m, ModuleRole = mr })
+                .Where(x => x.ModuleRole.RoleId == userRole!.RoleId && x.Module.State == true)
+                .Select(x => x.Module)
                 .ToListAsync();
 
-            return menus;
+            return modules;
         }
 
-        public async Task<IEnumerable<Menu>> GetMenuPermissionByRoleIdAsync(int? roleId)
+        public async Task<IEnumerable<Module>> GetModulePermissionByRoleIdAsync(int? roleId)
         {
-            var query = _context.Menus
+            var query = _context.Modules
                     .AsNoTracking()
                     .AsSplitQuery()
-                    .Where(m => m.Url != null && m.State == "1");
+                    .Where(m => m.Url != null && m.State == true);
 
             //if (roleId != 0)
             //{
@@ -50,28 +50,27 @@ namespace WH.Infrastructure.Persistence.Repositories
             //}
             //else
             //{
-            var menus = await query.ToListAsync();
-            return menus;
+            var modules = await query.ToListAsync();
+            return modules;
             //}
         }
 
-        public async Task<List<MenuRole>> GetMenuRolesByRoleId(int roleId)
+        public async Task<List<ModuleRole>> GetModuleRolesByRoleId(int roleId)
         {
-            return await _context.MenuRoles
+            return await _context.ModuleRoles
                     .AsNoTracking()
                     .Where(pr => pr.RoleId == roleId)
                     .ToListAsync();
         }
 
-        public async Task<bool> RegisterRoleMenus(IEnumerable<MenuRole> menuRoles)
+        public async Task<bool> RegisterRoleModules(IEnumerable<ModuleRole> moduleRoles)
         {
-            foreach (var menuRole in menuRoles)
+            foreach (var moduleRole in moduleRoles)
             {
-                menuRole.AuditCreateUser = 1;
-                menuRole.AuditCreateDate = DateTime.Now;
-                menuRole.State = "1";
+                moduleRole.AuditCreateDate = DateTime.Now;
+                moduleRole.State = true;
 
-                _context.MenuRoles.Add(menuRole);
+                _context.ModuleRoles.Add(moduleRole);
             }
 
             var recordsAffected = await _context.SaveChangesAsync();

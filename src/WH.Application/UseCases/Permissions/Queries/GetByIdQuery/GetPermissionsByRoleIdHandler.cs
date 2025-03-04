@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using MediatR;
 using WH.Application.Commons.Bases;
-using WH.Application.Constants;
 using WH.Application.Dtos.Permissions;
 using WH.Application.Interfaces.Services;
+using WH.Application.Shared;
 
 namespace WH.Application.UseCases.Permissions.Queries.GetByIdQuery
 {
@@ -25,12 +25,12 @@ namespace WH.Application.UseCases.Permissions.Queries.GetByIdQuery
 
             try
             {
-                var menus = await _unitOfWork.Menu.GetMenuPermissionByRoleIdAsync(request.RoleId);
+                var menus = await _unitOfWork.Menu.GetModulePermissionByRoleIdAsync(request.RoleId);
 
                 if (menus is null)
                 {
                     response.IsSuccess = false;
-                    response.Message = GlobalMessages.MESSAGE_QUERY_EMPTY;
+                    response.Message = Constants.MESSAGE_QUERY_EMPTY;
                     return response;
                 }
 
@@ -60,7 +60,7 @@ namespace WH.Application.UseCases.Permissions.Queries.GetByIdQuery
 
                 response.IsSuccess = true;
                 response.Data = permissionsResult;
-                response.Message = GlobalMessages.MESSAGE_QUERY;
+                response.Message = Constants.MESSAGE_QUERY;
             }
             catch (Exception ex)
             {

@@ -15,7 +15,7 @@ namespace WH.Application.Mappings
           .ForMember(x => x.UserId, y => y
               .MapFrom(x => x.Id))
           .ForMember(x => x.StateDescription, y => y
-              .MapFrom(x => x.State == "1" ? "Enabled" : "Disabled"))
+              .MapFrom(x => x.State == true ? "Enabled" : "Disabled"))
           .ReverseMap();
 
 

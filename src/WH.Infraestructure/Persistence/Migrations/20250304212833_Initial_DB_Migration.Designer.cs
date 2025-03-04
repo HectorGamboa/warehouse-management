@@ -11,7 +11,7 @@ using WH.Infrastructure.Persistence.Context;
 namespace WH.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250225201211_Initial_DB_Migration")]
+    [Migration("20250304212833_Initial_DB_Migration")]
     partial class Initial_DB_Migration
     {
         /// <inheritdoc />
@@ -22,30 +22,84 @@ namespace WH.Infrastructure.Persistence.Migrations
                 .HasAnnotation("ProductVersion", "8.0.11")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
-            modelBuilder.Entity("WH.Domain.Entities.Menu", b =>
+            modelBuilder.Entity("WH.Domain.Entities.Bitacora", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasColumnName("MenuId");
+                        .HasColumnName("LogId");
+
+                    b.Property<string>("Action")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(150)");
+
+                    b.Property<bool>("ActionResult")
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<DateTime>("AuditCreateDate")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int>("AuditCreateUser")
-                        .HasColumnType("int");
-
                     b.Property<DateTime?>("AuditDeleteDate")
                         .HasColumnType("datetime(6)");
-
-                    b.Property<int?>("AuditDeleteUser")
-                        .HasColumnType("int");
 
                     b.Property<DateTime?>("AuditUpdateDate")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int?>("AuditUpdateUser")
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("Date");
+
+                    b.Property<string>("Documento")
+                        .HasColumnType("longtext");
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("varchar(500)");
+
+                    b.Property<string>("Module")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(150)");
+
+                    b.Property<int>("ModuleId")
                         .HasColumnType("int");
+
+                    b.Property<bool>("State")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int")
+                        .HasColumnName("UserId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Bitacora");
+                });
+
+            modelBuilder.Entity("WH.Domain.Entities.Module", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("ModuleId");
+
+                    b.Property<DateTime>("AuditCreateDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime?>("AuditDeleteDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime?>("AuditUpdateDate")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<int?>("FatherId")
                         .HasColumnType("int");
@@ -53,6 +107,9 @@ namespace WH.Infrastructure.Persistence.Migrations
                     b.Property<string>("Icon")
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -63,8 +120,8 @@ namespace WH.Infrastructure.Persistence.Migrations
                     b.Property<int>("Position")
                         .HasColumnType("int");
 
-                    b.Property<string>("State")
-                        .HasColumnType("longtext");
+                    b.Property<bool>("State")
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<string>("Url")
                         .HasMaxLength(150)
@@ -72,12 +129,12 @@ namespace WH.Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Menus");
+                    b.ToTable("Modules");
                 });
 
-            modelBuilder.Entity("WH.Domain.Entities.MenuRole", b =>
+            modelBuilder.Entity("WH.Domain.Entities.ModuleRole", b =>
                 {
-                    b.Property<int>("MenuId")
+                    b.Property<int>("ModuleId")
                         .HasColumnType("int");
 
                     b.Property<int>("RoleId")
@@ -86,29 +143,23 @@ namespace WH.Infrastructure.Persistence.Migrations
                     b.Property<DateTime>("AuditCreateDate")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int>("AuditCreateUser")
-                        .HasColumnType("int");
-
                     b.Property<DateTime?>("AuditDeleteDate")
                         .HasColumnType("datetime(6)");
-
-                    b.Property<int?>("AuditDeleteUser")
-                        .HasColumnType("int");
 
                     b.Property<DateTime?>("AuditUpdateDate")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int?>("AuditUpdateUser")
-                        .HasColumnType("int");
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("tinyint(1)");
 
-                    b.Property<string>("State")
-                        .HasColumnType("longtext");
+                    b.Property<bool>("State")
+                        .HasColumnType("tinyint(1)");
 
-                    b.HasKey("MenuId", "RoleId");
+                    b.HasKey("ModuleId", "RoleId");
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("MenuRoles");
+                    b.ToTable("ModuleRoles");
                 });
 
             modelBuilder.Entity("WH.Domain.Entities.Permission", b =>
@@ -121,24 +172,18 @@ namespace WH.Infrastructure.Persistence.Migrations
                     b.Property<DateTime>("AuditCreateDate")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int>("AuditCreateUser")
-                        .HasColumnType("int");
-
                     b.Property<DateTime?>("AuditDeleteDate")
                         .HasColumnType("datetime(6)");
-
-                    b.Property<int?>("AuditDeleteUser")
-                        .HasColumnType("int");
 
                     b.Property<DateTime?>("AuditUpdateDate")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int?>("AuditUpdateUser")
-                        .HasColumnType("int");
-
                     b.Property<string>("Description")
                         .HasMaxLength(255)
                         .HasColumnType("varchar(255)");
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<int>("MenuId")
                         .HasColumnType("int");
@@ -152,14 +197,41 @@ namespace WH.Infrastructure.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<string>("State")
-                        .HasColumnType("longtext");
+                    b.Property<bool>("State")
+                        .HasColumnType("tinyint(1)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("MenuId");
 
                     b.ToTable("Permissions");
+                });
+
+            modelBuilder.Entity("WH.Domain.Entities.RefreshToken", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("ExpiresOnUtc")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Token")
+                        .IsUnique();
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("RefreshTokens");
                 });
 
             modelBuilder.Entity("WH.Domain.Entities.Role", b =>
@@ -172,32 +244,26 @@ namespace WH.Infrastructure.Persistence.Migrations
                     b.Property<DateTime>("AuditCreateDate")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int>("AuditCreateUser")
-                        .HasColumnType("int");
-
                     b.Property<DateTime?>("AuditDeleteDate")
                         .HasColumnType("datetime(6)");
-
-                    b.Property<int?>("AuditDeleteUser")
-                        .HasColumnType("int");
 
                     b.Property<DateTime?>("AuditUpdateDate")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int?>("AuditUpdateUser")
-                        .HasColumnType("int");
-
                     b.Property<string>("Description")
                         .HasMaxLength(255)
                         .HasColumnType("varchar(255)");
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
 
-                    b.Property<string>("State")
-                        .HasColumnType("longtext");
+                    b.Property<bool>("State")
+                        .HasColumnType("tinyint(1)");
 
                     b.HasKey("Id");
 
@@ -215,23 +281,17 @@ namespace WH.Infrastructure.Persistence.Migrations
                     b.Property<DateTime>("AuditCreateDate")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int>("AuditCreateUser")
-                        .HasColumnType("int");
-
                     b.Property<DateTime?>("AuditDeleteDate")
                         .HasColumnType("datetime(6)");
-
-                    b.Property<int?>("AuditDeleteUser")
-                        .HasColumnType("int");
 
                     b.Property<DateTime?>("AuditUpdateDate")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int?>("AuditUpdateUser")
-                        .HasColumnType("int");
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("tinyint(1)");
 
-                    b.Property<string>("State")
-                        .HasColumnType("longtext");
+                    b.Property<bool>("State")
+                        .HasColumnType("tinyint(1)");
 
                     b.HasKey("RoleId", "PermissionId");
 
@@ -250,20 +310,11 @@ namespace WH.Infrastructure.Persistence.Migrations
                     b.Property<DateTime>("AuditCreateDate")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int>("AuditCreateUser")
-                        .HasColumnType("int");
-
                     b.Property<DateTime?>("AuditDeleteDate")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int?>("AuditDeleteUser")
-                        .HasColumnType("int");
-
                     b.Property<DateTime?>("AuditUpdateDate")
                         .HasColumnType("datetime(6)");
-
-                    b.Property<int?>("AuditUpdateUser")
-                        .HasColumnType("int");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -274,6 +325,9 @@ namespace WH.Infrastructure.Persistence.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
 
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -283,8 +337,8 @@ namespace WH.Infrastructure.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<string>("State")
-                        .HasColumnType("longtext");
+                    b.Property<bool>("State")
+                        .HasColumnType("tinyint(1)");
 
                     b.HasKey("Id");
 
@@ -304,26 +358,20 @@ namespace WH.Infrastructure.Persistence.Migrations
                     b.Property<DateTime>("AuditCreateDate")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int>("AuditCreateUser")
-                        .HasColumnType("int");
-
                     b.Property<DateTime?>("AuditDeleteDate")
                         .HasColumnType("datetime(6)");
-
-                    b.Property<int?>("AuditDeleteUser")
-                        .HasColumnType("int");
 
                     b.Property<DateTime?>("AuditUpdateDate")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int?>("AuditUpdateUser")
-                        .HasColumnType("int");
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<int>("RoleId")
                         .HasColumnType("int");
 
-                    b.Property<string>("State")
-                        .HasColumnType("longtext");
+                    b.Property<bool>("State")
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
@@ -337,11 +385,22 @@ namespace WH.Infrastructure.Persistence.Migrations
                     b.ToTable("UserRoles");
                 });
 
-            modelBuilder.Entity("WH.Domain.Entities.MenuRole", b =>
+            modelBuilder.Entity("WH.Domain.Entities.Bitacora", b =>
                 {
-                    b.HasOne("WH.Domain.Entities.Menu", "Menu")
+                    b.HasOne("WH.Domain.Entities.User", "User")
                         .WithMany()
-                        .HasForeignKey("MenuId")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("WH.Domain.Entities.ModuleRole", b =>
+                {
+                    b.HasOne("WH.Domain.Entities.Module", "Menu")
+                        .WithMany()
+                        .HasForeignKey("ModuleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -358,13 +417,24 @@ namespace WH.Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("WH.Domain.Entities.Permission", b =>
                 {
-                    b.HasOne("WH.Domain.Entities.Menu", "Menu")
+                    b.HasOne("WH.Domain.Entities.Module", "Menu")
                         .WithMany()
                         .HasForeignKey("MenuId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Menu");
+                });
+
+            modelBuilder.Entity("WH.Domain.Entities.RefreshToken", b =>
+                {
+                    b.HasOne("WH.Domain.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("WH.Domain.Entities.RolePermission", b =>

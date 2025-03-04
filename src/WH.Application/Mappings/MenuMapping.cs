@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using WH.Application.Dtos.Menus;
+using WH.Application.Dtos.Modules;
 using WH.Domain.Entities;
 
 namespace WH.Application.Mappings
@@ -8,7 +8,7 @@ namespace WH.Application.Mappings
     {
         public MenuMapping()
         {
-            CreateMap<Menu, MenuResponseDto>()
+            CreateMap<Module, ModuleResponseDto>()
                     .ForMember(x => x.MenuId, x => x.MapFrom(y => y.Id))
                     .ForMember(x => x.Item, x => x.MapFrom(y => y.Name))
                     .ForMember(x => x.Path, x => x.MapFrom(y => y.Url))

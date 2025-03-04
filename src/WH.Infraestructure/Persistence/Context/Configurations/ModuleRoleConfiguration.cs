@@ -4,12 +4,12 @@ using WH.Domain.Entities;
 
 namespace WH.Infrastructure.Persistence.Context.Configurations
 {
-    public class MenuRoleConfiguration : IEntityTypeConfiguration<MenuRole>
+    public class ModuleRoleConfiguration : IEntityTypeConfiguration<ModuleRole>
     {
-        public void Configure(EntityTypeBuilder<MenuRole> builder)
+        public void Configure(EntityTypeBuilder<ModuleRole> builder)
         {
             builder.Ignore(x => x.Id);
-            builder.HasKey(e => new { e.MenuId, e.RoleId });
+            builder.HasKey(e => new { e.ModuleId, e.RoleId });
         }
     }
 }

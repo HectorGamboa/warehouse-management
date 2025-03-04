@@ -54,9 +54,8 @@ namespace WH.Infrastructure.Persistence.Repositories
         {
             foreach (var rolePermission in rolePermissions)
             {
-                rolePermission.AuditCreateUser = 1;
                 rolePermission.AuditCreateDate = DateTime.Now;
-                rolePermission.State = "1";
+                rolePermission.State = true;
 
                 _context.RolePermissions.Add(rolePermission);
             }

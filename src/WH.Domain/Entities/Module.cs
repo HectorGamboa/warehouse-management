@@ -1,6 +1,6 @@
 ﻿namespace WH.Domain.Entities
 {
-    public class Menu : BaseEntity
+    public class Module : BaseEntity
     {
         public int Position { get; init; }
         public string Name { get; init; } = null!;

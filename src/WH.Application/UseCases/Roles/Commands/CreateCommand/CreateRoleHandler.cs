@@ -30,10 +30,10 @@ namespace WH.Application.UseCases.Roles.Commands.CreateCommand
                 await _unitOfWork.SaveChangesAsync();
 
                 var menus = request.Menus
-                        .Select(menu => new MenuRole
+                        .Select(menu => new ModuleRole
                         {
                             RoleId = role.Id,
-                            MenuId = menu.MenuId
+                            ModuleId = menu.MenuId
                         }).ToList();
 
                 var permissions = request.Permissions
@@ -44,7 +44,7 @@ namespace WH.Application.UseCases.Roles.Commands.CreateCommand
                         }).ToList();
 
                 await _unitOfWork.Permission.RegisterRolePermissions(permissions);
-                await _unitOfWork.Menu.RegisterRoleMenus(menus);
+                await _unitOfWork.Menu.RegisterRoleModules(menus);
 
                 transaction.Commit();
                 response.IsSuccess = true;
