@@ -7,6 +7,10 @@ using WH.Api.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 var Cors = "Cors";
+var environment = builder.Environment.EnvironmentName;
+var allowedOrigins = environment == "Development"
+    ? new[] { "http://localhost:4200" }
+    : new[] { "https://mi-sitio.com", "https://api.mi-sitio.com" };
 // Add services to the container.
 builder.Services
     .AddInfrastructure(builder.Configuration)
@@ -29,7 +33,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: Cors,
         builder =>
         {
-            builder.WithOrigins("*");
+            builder.WithOrigins(allowedOrigins);
             builder.AllowAnyMethod();
             builder.AllowAnyHeader();
         });
