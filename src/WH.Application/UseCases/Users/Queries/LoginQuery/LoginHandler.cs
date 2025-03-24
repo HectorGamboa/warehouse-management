@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using WH.Application.Commons.Bases;
-using WH.Application.Dtos.Users;
+using WH.Application.Dtos.Auth;
 using WH.Application.Interfaces.Authentication;
 using WH.Application.Interfaces.Services;
 using WH.Domain.Entities;
@@ -9,7 +9,7 @@ using BC = BCrypt.Net.BCrypt;
 
 namespace WH.Application.UseCases.Users.Queries.LoginQuery
 {
-    public class LoginHandler : IRequestHandler<LoginQuery, BaseResponse<UserByIdResponseDto>>
+    public class LoginHandler : IRequestHandler<LoginQuery, BaseResponse<LoginUserResponseDto>>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IJwtTokenGenerator _jwtTokenGenerator;
@@ -23,30 +23,30 @@ namespace WH.Application.UseCases.Users.Queries.LoginQuery
             _mapper = mapper;
         }
 
-        public async Task<BaseResponse<UserByIdResponseDto>> Handle(LoginQuery request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<LoginUserResponseDto>> Handle(LoginQuery request, CancellationToken cancellationToken)
         {
-            var response = new BaseResponse<UserByIdResponseDto>();
+            var response = new BaseResponse<LoginUserResponseDto>();
 
             try
             {
                 var user = await _unitOfWork.User.UserByEmailAsync(request.Email);
-
+               
                 if (user is null)
                 {
-                    response.IsSuccess = false;
-                    response.Message = "El usuario no existe en la base de datos.";
-                    return response;
+                    throw new UnauthorizedAccessException("Invalid credentials.");
+                }
+
+                if (user.IsDelete || user.State == false)
+                {
+                    throw new UnauthorizedAccessException("The user is inactive, contact support.");
                 }
 
                 if (!BC.Verify(request.Password, user.Password))
                 {
-                    response.IsSuccess = false;
-                    response.Message = "La contraseña es incorrecta.";
-                    return response;
+                    throw new UnauthorizedAccessException("Invalid credentials.");                    
                 }
-
                 response.IsSuccess = true;
-                response.AccessToken = _jwtTokenGenerator.GenerateToken(user);
+                var accessToken = _jwtTokenGenerator.GenerateToken(user);
 
                 var refreshToken = new RefreshToken
                 {
@@ -58,13 +58,17 @@ namespace WH.Application.UseCases.Users.Queries.LoginQuery
 
                 _unitOfWork.RefreshToken.CreateToken(refreshToken);
                 await _unitOfWork.SaveChangesAsync();
-                response.Data = _mapper.Map<UserByIdResponseDto>(user);
-                response.RefreshToken = refreshToken.Token;
-                response.Message = "Token generado correctamente";
+                response.Data = new LoginUserResponseDto
+                {
+                    User = user,
+                    AccessToken = accessToken,
+                    RefreshToken = refreshToken.Token
+                };
+                    response.Message = "Token generated successfully";
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                response.Message = ex.Message;
+                throw ; 
             }
 
             return response;

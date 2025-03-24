@@ -1,11 +1,12 @@
 ﻿using MediatR;
 using WH.Application.Commons.Bases;
+using WH.Application.Dtos.Auth;
 using WH.Application.Interfaces.Authentication;
 using WH.Application.Interfaces.Services;
 
 namespace WH.Application.UseCases.Users.Commands.LoginRefreshTokenCommand
 {
-    internal sealed class LoginRefreshTokenHandler : IRequestHandler<LoginRefreshTokenCommand, BaseResponse<string>>
+    internal sealed class LoginRefreshTokenHandler : IRequestHandler<LoginRefreshTokenCommand, BaseResponse<LoginRefreshTokenDto>>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IJwtTokenGenerator _jwtTokenGenerator;
@@ -16,39 +17,31 @@ namespace WH.Application.UseCases.Users.Commands.LoginRefreshTokenCommand
             _jwtTokenGenerator = jwtTokenGenerator;
         }
 
-        public async Task<BaseResponse<string>> Handle(LoginRefreshTokenCommand request, CancellationToken cancellationToken)
+        public async Task<BaseResponse<LoginRefreshTokenDto>> Handle(LoginRefreshTokenCommand request, CancellationToken cancellationToken)
         {
-            var response = new BaseResponse<string>();
+            var response = new BaseResponse<LoginRefreshTokenDto>();
 
-            try
-            {
-                var refreshToken = await _unitOfWork.RefreshToken
-                    .GetRefreshTokenAsync(request.RefreshToken!);
-
-                if (refreshToken is null || refreshToken.ExpiresOnUtc < DateTime.UtcNow)
-                {
-                    response.IsSuccess = false;
-                    response.Message = "El token de actualización ha expirado.";
-                    return response;
-                }
-
-                string accessToken = _jwtTokenGenerator.GenerateToken(refreshToken.User);
-                refreshToken.Token = _jwtTokenGenerator.GenerateRefreshToken();
-                refreshToken.ExpiresOnUtc = DateTime.UtcNow.AddDays(7);
-
-                await _unitOfWork.SaveChangesAsync();
-
-                response.IsSuccess = true;
-                response.AccessToken = accessToken;
-                response.RefreshToken = refreshToken.Token;
-                response.Message = "Token de actualización creado exitosamente.";
+            var refreshToken = await _unitOfWork.RefreshToken.GetRefreshTokenAsync(request.RefreshToken!);
+            if(refreshToken == null){
+               throw new UnauthorizedAccessException("Invalid refresh token");
             }
-            catch (Exception ex)
+            if (refreshToken.ExpiresOnUtc < DateTime.UtcNow)
             {
-                response.IsSuccess = false;
-                response.Message = ex.Message;
+               throw new UnauthorizedAccessException("The refresh token has expired.");
             }
 
+            string accessToken = _jwtTokenGenerator.GenerateToken(refreshToken.User);
+            refreshToken.Token = _jwtTokenGenerator.GenerateRefreshToken();
+            refreshToken.ExpiresOnUtc = DateTime.UtcNow.AddDays(7);
+
+            await _unitOfWork.SaveChangesAsync();
+
+            response.IsSuccess = true;
+
+            var data = new LoginRefreshTokenDto { AccessToken = accessToken, RefreshToken = refreshToken.Token };
+
+            response.Data = data;
+            response.Message = "Refresh token created successfully.";
             return response;
         }
     }
