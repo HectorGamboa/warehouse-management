@@ -16,7 +16,10 @@ namespace WH.Infrastructure.Persistence.Context.Configurations
             builder.Property(e => e.FirstName)
                 .HasMaxLength(50);
 
-            builder.Property(e => e.LastName)
+            builder.Property(e => e.PaternalLastName)
+                .HasMaxLength(100);
+
+            builder.Property(e => e.MaternalLastName)
                 .HasMaxLength(100);
 
             builder.HasIndex(e => e.Email)

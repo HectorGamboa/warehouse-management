@@ -29,7 +29,7 @@ namespace WH.Application.Mappings
 
             CreateMap<User, SelectResponseDto>()
                 .ForMember(x => x.Code, x => x.MapFrom(y => y.Id))
-                .ForMember(x => x.Description, x => x.MapFrom(y => y.FirstName + " " + y.LastName))
+                .ForMember(x => x.Description, x => x.MapFrom(y => y.FirstName + " " + y.PaternalLastName + " " + y.MaternalLastName))
                 .ReverseMap();
         }
     }

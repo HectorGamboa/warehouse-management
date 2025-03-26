@@ -36,7 +36,7 @@ namespace WH.Infrastructure.Persistence.Repositories
             var query = _context.Modules
                     .AsNoTracking()
                     .AsSplitQuery()
-                    .Where(m => m.Url != null && m.State == true);
+                    .Where(m => m.Route != null && m.State == true);
 
             //if (roleId != 0)
             //{

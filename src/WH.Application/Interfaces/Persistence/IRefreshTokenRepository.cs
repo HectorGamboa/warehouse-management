@@ -6,6 +6,6 @@ namespace WH.Application.Interfaces.Persistence
     {
         void CreateToken(RefreshToken refreshToken);
         Task<RefreshToken> GetRefreshTokenAsync(string refreshToken);
-        Task<bool> RevokeRefreshTokenAsync(int userId);
+        Task<bool> RevokeRefreshTokenAsync(string refreshToken);
     }
 }

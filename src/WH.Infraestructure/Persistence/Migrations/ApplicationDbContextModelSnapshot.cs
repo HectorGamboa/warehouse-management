@@ -101,6 +101,9 @@ namespace WH.Infrastructure.Persistence.Migrations
                     b.Property<int?>("FatherId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("Group")
+                        .HasColumnType("int");
+
                     b.Property<string>("Icon")
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
@@ -117,12 +120,12 @@ namespace WH.Infrastructure.Persistence.Migrations
                     b.Property<int>("Position")
                         .HasColumnType("int");
 
-                    b.Property<bool>("State")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<string>("Url")
+                    b.Property<string>("Route")
                         .HasMaxLength(150)
                         .HasColumnType("varchar(150)");
+
+                    b.Property<bool>("State")
+                        .HasColumnType("tinyint(1)");
 
                     b.HasKey("Id");
 
@@ -313,6 +316,9 @@ namespace WH.Infrastructure.Persistence.Migrations
                     b.Property<DateTime?>("AuditUpdateDate")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<DateTime?>("DateOfBirth")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("varchar(255)");
@@ -325,13 +331,21 @@ namespace WH.Infrastructure.Persistence.Migrations
                     b.Property<bool>("IsDelete")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<string>("LastName")
+                    b.Property<string>("MaternalLastName")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
 
                     b.Property<string>("Password")
                         .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("PaternalLastName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<string>("ProfilePictureUrl")
                         .HasColumnType("longtext");
 
                     b.Property<bool>("State")

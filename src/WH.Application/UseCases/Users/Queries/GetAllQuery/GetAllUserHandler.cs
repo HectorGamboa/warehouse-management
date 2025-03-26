@@ -37,7 +37,10 @@ namespace WH.Application.UseCases.Users.Queries.GetAllQuery
                             users = users.Where(x => x.FirstName.Contains(request.TextFilter));
                             break;
                         case 2:
-                            users = users.Where(x => x.LastName.Contains(request.TextFilter));
+                            users = users.Where(x => x.PaternalLastName.Contains(request.TextFilter));
+                            break;
+                        case 3:
+                            users = users.Where(x => x.MaternalLastName.Contains(request.TextFilter));
                             break;
                     }
                 }

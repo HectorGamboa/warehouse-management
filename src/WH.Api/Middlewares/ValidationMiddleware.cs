@@ -26,7 +26,7 @@ namespace WH.Api.Middlewares
                 await JsonSerializer.SerializeAsync(context.Response.Body, new BaseResponse<object>
                 {
                     IsSuccess = false,
-                    Message = "Error de validación",
+                    Message = "Validation error",
                     Errors = ex.Errors,
                 });
             }

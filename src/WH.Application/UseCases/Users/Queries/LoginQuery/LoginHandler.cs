@@ -60,7 +60,6 @@ namespace WH.Application.UseCases.Users.Queries.LoginQuery
                 await _unitOfWork.SaveChangesAsync();
                 response.Data = new LoginUserResponseDto
                 {
-                    User = user,
                     AccessToken = accessToken,
                     RefreshToken = refreshToken.Token
                 };

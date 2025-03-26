@@ -14,14 +14,13 @@ namespace WH.Application.UseCases.Users.Commands.RevokeRefreshTokenCommand
 
             try
             {
-                await _unitOfWork.RefreshToken.RevokeRefreshTokenAsync(request.UserId);
+                await _unitOfWork.RefreshToken.RevokeRefreshTokenAsync(request.RefreshToken!);
                 response.IsSuccess = true;
-                response.Message = "Revocar el token de actualización con éxito.";
+                response.Message = "Successfully revoked the refresh token.";
             }
-            catch (Exception ex)
+            catch (Exception )
             {
-                response.IsSuccess = false;
-                response.Message = ex.Message;
+                throw;
             }
 
             return response;

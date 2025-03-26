@@ -20,7 +20,7 @@ namespace WH.Infrastructure.Persistence.Context.Configurations
             builder.Property(e => e.Icon)
                     .HasMaxLength(50);
 
-            builder.Property(e => e.Url)
+            builder.Property(e => e.Route)
                 .HasMaxLength(150);
         }
     }

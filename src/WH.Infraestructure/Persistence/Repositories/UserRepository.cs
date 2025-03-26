@@ -37,7 +37,7 @@ namespace WH.Infrastructure.Persistence.Repositories
                                    MenuId = m.Id,
                                    Name = m.Name,
                                    Icon = m.Icon,
-                                   Url = m.Url,
+                                   Url = m.Route,
                                    FatherId = m.FatherId
                                }).ToListAsync();
 
@@ -65,7 +65,8 @@ namespace WH.Infrastructure.Persistence.Repositories
             {
                 UserId = userWithRoles.User.Id,
                 FirstName = userWithRoles.User.FirstName,
-                LastName = userWithRoles.User.LastName,
+                PaternalLastName = userWithRoles.User.PaternalLastName,
+                MaternalLastName = userWithRoles.User.MaternalLastName,
                 Email = userWithRoles.User.Email,
                 Role = new RoleDto
                 {

@@ -23,12 +23,11 @@ namespace WH.Infrastructure.Persistence.Repositories
             return token!;
         }
 
-        public async Task<bool> RevokeRefreshTokenAsync(int userId)
+        public async Task<bool> RevokeRefreshTokenAsync(string tokenRefresh)
         {
             await _context.RefreshTokens
-                .Where(x => x.UserId == userId)
+                .Where(x => x.Token == tokenRefresh)
                 .ExecuteDeleteAsync();
-
             return true;
         }
     }

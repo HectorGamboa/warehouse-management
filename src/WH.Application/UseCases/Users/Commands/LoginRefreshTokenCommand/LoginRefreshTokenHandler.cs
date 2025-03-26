@@ -20,28 +20,35 @@ namespace WH.Application.UseCases.Users.Commands.LoginRefreshTokenCommand
         public async Task<BaseResponse<LoginRefreshTokenDto>> Handle(LoginRefreshTokenCommand request, CancellationToken cancellationToken)
         {
             var response = new BaseResponse<LoginRefreshTokenDto>();
-
-            var refreshToken = await _unitOfWork.RefreshToken.GetRefreshTokenAsync(request.RefreshToken!);
-            if(refreshToken == null){
-               throw new UnauthorizedAccessException("Invalid refresh token");
-            }
-            if (refreshToken.ExpiresOnUtc < DateTime.UtcNow)
+            try
             {
-               throw new UnauthorizedAccessException("The refresh token has expired.");
+                var refreshToken = await _unitOfWork.RefreshToken.GetRefreshTokenAsync(request.RefreshToken!);
+                if (refreshToken == null)
+                {
+                    throw new UnauthorizedAccessException("Invalid refresh token");
+                }
+                if (refreshToken.ExpiresOnUtc < DateTime.UtcNow)
+                {
+                    throw new UnauthorizedAccessException("The refresh token has expired.");
+                }
+
+                string accessToken = _jwtTokenGenerator.GenerateToken(refreshToken.User);
+                refreshToken.Token = _jwtTokenGenerator.GenerateRefreshToken();
+                refreshToken.ExpiresOnUtc = DateTime.UtcNow.AddDays(7);
+
+                await _unitOfWork.SaveChangesAsync();
+
+                response.IsSuccess = true;
+
+                var data = new LoginRefreshTokenDto { AccessToken = accessToken, RefreshToken = refreshToken.Token };
+
+                response.Data = data;
+                response.Message = "Refresh token created successfully.";
             }
-
-            string accessToken = _jwtTokenGenerator.GenerateToken(refreshToken.User);
-            refreshToken.Token = _jwtTokenGenerator.GenerateRefreshToken();
-            refreshToken.ExpiresOnUtc = DateTime.UtcNow.AddDays(7);
-
-            await _unitOfWork.SaveChangesAsync();
-
-            response.IsSuccess = true;
-
-            var data = new LoginRefreshTokenDto { AccessToken = accessToken, RefreshToken = refreshToken.Token };
-
-            response.Data = data;
-            response.Message = "Refresh token created successfully.";
+            catch (Exception)
+            {
+                throw;
+            }
             return response;
         }
     }

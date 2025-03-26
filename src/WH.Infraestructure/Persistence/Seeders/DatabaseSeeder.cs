@@ -20,7 +20,7 @@ namespace WH.Infrastructure.Persistence.Seeders
             if (!_context.Users.Any())  // Verifica si hay registros antes de insertar
             {
                 _context.Users.AddRange(new List<User>{
-                    new User { FirstName = "Admin",LastName="",State=true, Email = "admin@whmanegement.com",Password =  BC.HashPassword("12345678") },
+                    new User { FirstName = "Admin",PaternalLastName="",MaternalLastName="",State=true, Email = "admin@whmanegement.com",Password =  BC.HashPassword("12345678") },
                 });
                 await _context.SaveChangesAsync();
             }
@@ -40,11 +40,11 @@ namespace WH.Infrastructure.Persistence.Seeders
             }
             if (!_context.Modules.Any()) { // Verifica si hay registros antes de insertar
                 _context.Modules.AddRange(new List<Module>{
-                    new Module { Name = "Dashboard",Position=0,State=true,Url="/dahsboard",Icon= "fas fa-house",FatherId=null},
-                    new Module { Name = "Users",Position=1,State=true,Url="/users",Icon="fas fa-users",FatherId=null},
-                    new Module { Name = "Roles",Position=2,State=true,Url="/roles",Icon="fas fa-user-tag",FatherId=null},
-                    new Module { Name = "Permissions",Position=3,State=true,Url="/permissions",Icon="fas fa-user-lock",FatherId=null},
-                    new Module { Name = "Modules",Position=4,State=true,Url="/modules",Icon="fas fa-bars",FatherId=null},
+                    new Module { Name = "Dashboard",Position=0,State=true,Route="/dahsboard",Icon= "assets/icons/heroicons/outline/chart-pie.svg",FatherId=null},
+                    new Module { Name = "Users",Position=1,State=true,Route="/users",Icon="fas fa-users",FatherId=null},
+                    new Module { Name = "Roles",Position=2,State=true,Route="/roles",Icon="fas fa-user-tag",FatherId=null},
+                    new Module { Name = "Permissions",Position=3,State=true,Route="/permissions",Icon="fas fa-user-lock",FatherId=null},
+                    new Module { Name = "Modules",Position=4,State=true,Route="/modules",Icon="fas fa-bars",FatherId=null},
                 });
                 await _context.SaveChangesAsync();
             }

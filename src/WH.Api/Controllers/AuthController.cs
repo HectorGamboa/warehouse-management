@@ -17,24 +17,24 @@ namespace WH.Api.Controllers
             _sender = sender;
         }
 
-        [HttpPost("Login")]
+        [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginQuery request)
         {
             var response = await _sender.Send(request);
             return Ok(response);
         }
 
-        [HttpPost("LoginRefreshToken")]
+        [HttpPost("login-refreshtoken")]
         public async Task<IActionResult> LoginRefreshToken([FromBody] LoginRefreshTokenCommand request)
         {
             var response = await _sender.Send(request);
             return Ok(response);
         }
 
-        [HttpDelete("RevokeRefreshToken/{userId:int}")]
-        public async Task<IActionResult> RevokeRefreshToken(int userId)
+        [HttpPost("revoke-refreshtoken")]
+        public async Task<IActionResult> RevokeRefreshToken([FromBody] RevokeRefreshTokenCommand request)
         {
-            var response = await _sender.Send(new RevokeRefreshTokenCommand { UserId = userId });
+            var response = await _sender.Send(request);
             return Ok(response);
         }
     }
